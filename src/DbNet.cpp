@@ -59,6 +59,13 @@ void DbNet::initModel(const std::string &pathStr) {
     outputNamesPtr = getOutputNames(session);
 }
 
+// MCCP: same as above, from a model already in memory.
+void DbNet::initModel(const void *modelData, size_t modelLen) {
+    session = new Ort::Session(env, modelData, modelLen, sessionOptions);
+    inputNamesPtr = getInputNames(session);
+    outputNamesPtr = getOutputNames(session);
+}
+
 std::vector<TextBox> findRsBoxes(const cv::Mat &predMat, const cv::Mat &dilateMat, ScaleParam &s,
                                  const float boxScoreThresh, const float unClipRatio) {
     const int longSideThresh = 3;//minBox 长边门限

@@ -54,6 +54,16 @@ bool OcrLiteImpl::initModels(const std::string &detPath, const std::string &clsP
     return true;
 }
 
+// MCCP: no AngleNet here. With doAngle = false, AngleNet::getAngles never
+// touches its session, so detect() works without the classifier.
+bool OcrLiteImpl::initModels(const void *detData, size_t detLen,
+                             const void *recData, size_t recLen,
+                             const char *keysData, size_t keysLen) {
+    dbNet.initModel(detData, detLen);
+    crnnNet.initModel(recData, recLen, keysData, keysLen);
+    return true;
+}
+
 void OcrLiteImpl::Logger(const char *format, ...) {
     if (!(isOutputConsole || isOutputResultTxt)) return;
     memset(loggerBuffer, 0, 8192);

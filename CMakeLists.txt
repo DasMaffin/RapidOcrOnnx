@@ -7,6 +7,13 @@ elseif (UNIX)
 endif ()
 project(RapidOcrOnnx)
 
+# MCCP: -DOCR_OUTPUT=MCCP builds ocr.dll, the MCCP native module. It is set up
+# entirely in mccp/mccp.cmake; nothing below this block applies to it.
+if (OCR_OUTPUT STREQUAL "MCCP")
+    include(${CMAKE_CURRENT_SOURCE_DIR}/mccp/mccp.cmake)
+    return()
+endif ()
+
 # Output BIN JNI CLIB
 if (NOT DEFINED OCR_OUTPUT)
     set(OCR_OUTPUT "BIN")
