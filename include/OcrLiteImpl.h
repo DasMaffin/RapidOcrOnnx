@@ -26,6 +26,15 @@ public:
     bool initModels(const std::string &detPath, const std::string &clsPath,
                     const std::string &recPath, const std::string &keysPath);
 
+    // MCCP: detection and recognition from memory, without the angle classifier.
+    // The angle net stays unloaded, so detect() must then be called with doAngle = false.
+    bool initModels(const void *detData, size_t detLen,
+                    const void *recData, size_t recLen,
+                    const char *keysData, size_t keysLen);
+
+    // MCCP: the recogniser, for single text lines that need no detection.
+    CrnnNet &recognizer() { return crnnNet; }
+
     void Logger(const char *format, ...);
 
     OcrResult detect(const char *path, const char *imgName,

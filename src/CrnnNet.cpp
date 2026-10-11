@@ -90,6 +90,27 @@ void CrnnNet::initModel(const std::string &pathStr, const std::string &keysPath)
     printf("total keys size(%lu)\n", keys.size());
 }
 
+// MCCP: same as above, from memory. The keys are split into lines the way
+// getline reads the file (a final newline adds no empty key), minus any '\r'.
+void CrnnNet::initModel(const void *modelData, size_t modelLen, const char *keysData, size_t keysLen) {
+    session = new Ort::Session(env, modelData, modelLen, sessionOptions);
+    inputNamesPtr = getInputNames(session);
+    outputNamesPtr = getOutputNames(session);
+
+    keys.clear();
+    size_t start = 0;
+    while (start < keysLen) {
+        size_t end = start;
+        while (end < keysLen && keysData[end] != '\n') end++;
+        std::string line(keysData + start, end - start);
+        if (!line.empty() && line.back() == '\r') line.pop_back();
+        keys.push_back(line);
+        start = end + 1;
+    }
+    keys.insert(keys.begin(), "#");
+    keys.emplace_back(" ");
+}
+
 template<class ForwardIterator>
 inline static size_t argmax(ForwardIterator first, ForwardIterator last) {
     return std::distance(first, std::max_element(first, last));

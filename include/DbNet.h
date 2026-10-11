@@ -15,6 +15,9 @@ public:
 
     void initModel(const std::string &pathStr);
 
+    // MCCP: load the model from memory (an embedded resource) instead of a file.
+    void initModel(const void *modelData, size_t modelLen);
+
     std::vector<TextBox> getTextBoxes(cv::Mat &src, ScaleParam &s, float boxScoreThresh,
                                       float boxThresh, float unClipRatio);
 

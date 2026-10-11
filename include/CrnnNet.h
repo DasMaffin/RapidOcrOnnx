@@ -16,6 +16,12 @@ public:
 
     void initModel(const std::string &pathStr, const std::string &keysPath);
 
+    // MCCP: load the model and its keys (one character per line, UTF-8) from memory.
+    void initModel(const void *modelData, size_t modelLen, const char *keysData, size_t keysLen);
+
+    // MCCP: public, to recognise one text line on its own, without detection. Was private.
+    TextLine getTextLine(const cv::Mat &src);
+
     std::vector<TextLine> getTextLines(std::vector<cv::Mat> &partImg, const char *path, const char *imgName);
 
 private:
@@ -35,8 +41,6 @@ private:
     std::vector<std::string> keys;
 
     TextLine scoreToTextLine(const std::vector<float> &outputData, size_t h, size_t w);
-
-    TextLine getTextLine(const cv::Mat &src);
 };
 
 
